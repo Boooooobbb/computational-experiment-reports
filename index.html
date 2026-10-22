@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="计算实验交互报告导航：集中查看数值模拟、模型验证与数据分析的结果、图表和指标。">
+  <meta name="color-scheme" content="light">
+  <title>计算实验报告 · 研究结果导航</title>
+  <style>
+    :root { --ink:#142b35; --muted:#54717a; --teal:#117b81; --blue:#245fa2; --line:#cddfe1; --paper:#f4f8f7; --white:#fff; --warm:#fae6cd; }
+    * { box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { margin:0; font:16px/1.6 system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif; color:var(--ink); background:var(--paper); }
+    a { color:inherit; }
+    a:focus-visible, button:focus-visible, input:focus-visible { outline:3px solid #f0ac40; outline-offset:3px; }
+    .wrap { max-width:1180px; padding:0 28px; margin:auto; }
+    header { background:#12343e; color:#eef8f7; }
+    .topbar { min-height:76px; display:flex; align-items:center; justify-content:space-between; gap:20px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:720; letter-spacing:.01em; text-decoration:none; }
+    .brand-mark { width:34px; height:34px; border:2px solid #79cfcb; border-radius:9px; display:grid; place-items:center; color:#a3e9e1; font:700 17px/1 ui-monospace,monospace; }
+    nav { display:flex; gap:25px; color:#c7e2e1; font-size:14px; }
+    nav a { text-decoration:none; } nav a:hover { color:#fff; text-decoration:underline; }
+    .hero { position:relative; overflow:hidden; color:#f5fbfa; background:linear-gradient(112deg,#12343e 0%,#155a62 63%,#197b7e 100%); padding:74px 0 86px; }
+    .hero:after { content:""; position:absolute; width:760px; height:760px; right:-160px; top:-330px; border:1px solid #ffffff2b; border-radius:50%; box-shadow:0 0 0 90px #ffffff0a,0 0 0 180px #ffffff08; pointer-events:none; }
+    .eyebrow { color:#9ce0d9; text-transform:uppercase; letter-spacing:.16em; font:700 12px/1.5 ui-monospace,monospace; }
+    h1 { font-size:clamp(34px,5vw,60px); line-height:1.16; letter-spacing:-.04em; margin:16px 0 19px; max-width:800px; }
+    .hero p { max-width:730px; color:#d5e9e8; font-size:18px; margin:0; }
+    .hero-actions { display:flex; flex-wrap:wrap; gap:13px; margin-top:31px; }
+    .button { display:inline-flex; align-items:center; justify-content:center; min-height:43px; gap:8px; padding:9px 17px; border:1px solid #9ac8c8; border-radius:8px; text-decoration:none; font-weight:650; font-size:14px; transition:transform .18s,background .18s; }
+    .button:hover { transform:translateY(-2px); }
+    .button.primary { background:#def7f2; color:#154c52; border-color:#def7f2; }
+    .button.ghost { color:#e9f8f5; }
+    .hero-facts { display:flex; flex-wrap:wrap; gap:38px; margin-top:55px; }
+    .hero-facts div { border-left:2px solid #72c8c4; padding-left:14px; }
+    .hero-facts strong { display:block; font-size:23px; line-height:1.3; }
+    .hero-facts span { color:#c0dedd; font-size:13px; }
+    section { padding:69px 0; }
+    .section-title { display:flex; justify-content:space-between; align-items:end; gap:20px; margin-bottom:22px; }
+    .section-title h2 { margin:5px 0 0; font-size:30px; letter-spacing:-.025em; }
+    .section-title p { max-width:530px; margin:0; color:var(--muted); font-size:14px; }
+    .controls { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:12px; padding:17px 0 25px; }
+    .controls label { font-size:14px; color:var(--muted); }
+    .search { width:min(100%,350px); padding:11px 13px; border:1px solid #afc9cc; border-radius:8px; color:var(--ink); background:white; font:inherit; }
+    .count { color:var(--muted); font-size:13px; }
+    .grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:20px; }
+    .card { display:flex; flex-direction:column; min-width:0; background:var(--white); border:1px solid var(--line); border-radius:14px; overflow:hidden; box-shadow:0 10px 30px #16424b0a; }
+    .card-head { padding:25px 26px 20px; border-top:5px solid #208a91; }
+    .card:nth-child(2n) .card-head { border-top-color:#517baf; }
+    .card-meta { display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:9px; color:var(--muted); font-size:12px; }
+    .badge { display:inline-flex; align-items:center; padding:4px 9px; border-radius:20px; background:#e4f4ee; color:#236b56; font-weight:700; }
+    .badge.attention { background:var(--warm); color:#865213; }
+    .card h3 { margin:20px 0 5px; font-size:24px; line-height:1.25; }
+    .subtitle { color:var(--teal); font-size:14px; font-weight:700; }
+    .description { margin:12px 0 0; color:var(--muted); font-size:14px; min-height:45px; }
+    .metrics { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; padding:0 26px; }
+    .metric { background:#f2f7f7; border-radius:9px; padding:14px; }
+    .metric strong { display:block; font-size:22px; line-height:1.25; font-variant-numeric:tabular-nums; }
+    .metric span { display:block; margin-top:4px; font-size:12px; color:var(--muted); }
+    .focus { margin:18px 26px 0; padding:12px 14px; border-left:3px solid #d7a04b; background:#fff8ed; color:#5f4e35; font-size:13px; }
+    .card-footer { margin-top:auto; padding:21px 26px 25px; display:flex; flex-wrap:wrap; align-items:center; gap:14px; }
+    .card-footer .button { background:#176f78; border-color:#176f78; color:#fff; }
+    .card-footer a:not(.button) { color:var(--blue); font-size:13px; font-weight:650; text-underline-offset:3px; }
+    .method { color:var(--muted); padding:0 26px; font-size:12px; }
+    .empty { padding:45px; background:#fff; border:1px solid var(--line); border-radius:12px; color:var(--muted); }
+    .note-section { background:#e8f1f0; border-top:1px solid #d3e3e0; }
+    .note-grid { display:grid; grid-template-columns:1.2fr 1fr; gap:30px; }
+    .note-grid h2 { margin:5px 0 15px; font-size:27px; }
+    .note-grid p { color:#42616a; margin:0 0 13px; }
+    .note-grid ul { padding-left:20px; margin:0; color:#42616a; }
+    .note-grid li { margin:8px 0; }
+    footer { background:#12343e; color:#b9d6d5; padding:28px 0; font-size:13px; }
+    @media(max-width:760px) { .wrap{padding:0 18px} nav{gap:13px} .hero{padding:55px 0 63px} .hero-facts{gap:21px;margin-top:38px} .grid,.note-grid{grid-template-columns:1fr} .section-title{display:block} section{padding:52px 0} }
+    @media(max-width:450px) { nav a:last-child{display:none} .metrics{grid-template-columns:1fr} .card h3{font-size:22px} }
+    @media(prefers-reduced-motion:reduce) { *,*:before,*:after{scroll-behavior:auto!important;transition:none!important} }
+  </style>
+</head>
+<body>
+  <header><div class="wrap topbar"><a class="brand" href="./index.html"><span class="brand-mark">Σ</span><span>计算实验报告</span></a><nav aria-label="页面导航"><a href="#reports">交互报告</a><a href="#about">阅读说明</a></nav></div></header>
+  <main>
+    <div class="hero"><div class="wrap"><div class="eyebrow">Computational experiments / report hub</div><h1>让每一项计算实验，都有清晰的结果入口。</h1><p>集中浏览数值模拟、模型验证和数据分析的交互报告。每项实验保留自己的设置、指标与结论，便于检索、复核和持续积累。</p><div class="hero-actions"><a class="button primary" href="#reports">查看实验报告 <span aria-hidden="true">↗</span></a><a class="button ghost" href="#about">如何阅读这些结果</a></div><div class="hero-facts"><div><strong id="reportCount">2</strong><span>份已收录报告</span></div><div><strong>交互探索</strong><span>查看曲线与异常案例</span></div><div><strong>持续扩展</strong><span>后续实验统一收录</span></div></div></div></div>
+    <section id="reports"><div class="wrap"><div class="section-title"><div><div class="eyebrow" style="color:#157b82">Browse experiments</div><h2>实验报告</h2></div><p>打开报告探索交互图表；总览图和指标表可用于引用与二次分析。</p></div><div class="controls"><label for="search">按主题、方法或关键词查找</label><input id="search" class="search" type="search" autocomplete="off" placeholder="例如：模型验证、EnKF、温度"><span class="count" id="visibleCount"></span></div><div class="grid" id="cards"></div><div class="empty" id="empty" hidden>没有匹配的报告。试试其他关键词。</div></div></section>
+    <section class="note-section" id="about"><div class="wrap note-grid"><div><div class="eyebrow" style="color:#157b82">Read with context</div><h2>阅读说明</h2><p>不同实验可能使用不同模型、数据、算法和评价指标。比较结果前，请先查看各报告的实验设置与指标定义。</p><p>当前收录的两份 EnKF 报告均覆盖 14 个 case，但观测频率和更新方法不同。报告中的“训练 / 非训练”仅指模型训练轨迹归属；详细解释见各自报告。</p></div><div><div class="eyebrow" style="color:#157b82">Next results</div><h2>后续结果如何加入</h2><ul><li>新报告生成独立的 HTML 后，在本站报告清单中登记。</li><li>重新生成并部署主页，新报告会获得独立入口。</li><li>既有报告继续保留，方便按实验主题和方法回看。</li></ul></div></div></section>
+  </main>
+  <footer><div class="wrap">计算实验报告 · 交互式研究结果导航</div></footer>
+  <script id="report-data" type="application/json">{"reports": [{"id": "original-4hz", "title": "原始 OpInf + EnKF", "subtitle": "中子 4 Hz · 温度 4 Hz", "method": "确定性 EnKF", "source": "EnKF_OpInf_Error_Analysis.ipynb", "result_dir": "opinf_original_all_cases_4Hz_joint", "date": "2026-10-12", "status": "14 / 14 完成", "status_kind": "success", "metrics": [{"label": "参数 RMSE 中位数", "value": "0.01011"}, {"label": "总功率误差中位数", "value": "2.92%"}], "focus": "Case 14 总功率误差 10.72%，值得重点检查。", "description": "每 0.25 s 联合更新中子与出口温度；包含参数、功率、温度和先驱核结果。"}, {"id": "event-1hz-4hz", "title": "事件驱动 EnKF 对比", "subtitle": "中子 1 Hz · 温度 4 Hz", "method": "ETKF / 扰动观测 EnKF", "source": "EnKF_EventDriven_Neutron1Hz_Temperature4Hz_CN.ipynb", "result_dir": "all_cases_event_driven_1Hz_4Hz", "date": "2026-10-10", "status": "26 / 28 次运行完成", "status_kind": "attention", "metrics": [{"label": "ETKF 参数 RMSE 中位数", "value": "0.01206"}, {"label": "ETKF 总功率误差中位数", "value": "4.59%"}], "focus": "Case 14 两种滤波均中断；Case 6 的扰动观测 EnKF 数值失稳。", "description": "按观测事件分别更新中子与温度；并列比较 ETKF、扰动观测 EnKF 和真值输入 ROM。"}]}</script>
+  <script>
+  (() => {
+    const reports = JSON.parse(document.getElementById('report-data').textContent).reports;
+    const cards = document.getElementById('cards');
+    const search = document.getElementById('search');
+    const visibleCount = document.getElementById('visibleCount');
+    document.getElementById('reportCount').textContent = reports.length;
+    function make(tag, cls, value) { const el = document.createElement(tag); if (cls) el.className = cls; if (value !== undefined) el.textContent = value; return el; }
+    function link(label, href, cls) { const a = make('a', cls, label); a.href = href; return a; }
+    function render() {
+      const q = search.value.trim().toLocaleLowerCase();
+      const list = reports.filter(r => [r.title,r.subtitle,r.method,r.source,r.description].join(' ').toLocaleLowerCase().includes(q));
+      cards.replaceChildren();
+      for (const r of list) {
+        const card = make('article', 'card');
+        const head = make('div', 'card-head');
+        const meta = make('div', 'card-meta');
+        meta.append(make('span', 'badge' + (r.status_kind === 'attention' ? ' attention' : ''), r.status), make('time', '', r.date));
+        head.append(meta, make('h3', '', r.title), make('div', 'subtitle', r.subtitle), make('p', 'description', r.description));
+        card.append(head);
+        const metricBox = make('div', 'metrics');
+        for (const m of r.metrics) { const item = make('div', 'metric'); item.append(make('strong', '', m.value), make('span', '', m.label)); metricBox.append(item); }
+        card.append(metricBox, make('div', 'focus', r.focus), make('div', 'method', '算法：' + r.method));
+        const foot = make('div', 'card-footer');
+        const base = 'reports/' + encodeURIComponent(r.id) + '/';
+        foot.append(link('打开交互报告 ↗', base + 'dashboard.html', 'button'), link('总览图', base + 'overview.png'), link('指标 CSV', base + 'summary.csv'));
+        card.append(foot); cards.append(card);
+      }
+      document.getElementById('empty').hidden = list.length !== 0;
+      visibleCount.textContent = `显示 ${list.length} / ${reports.length} 份`;
+    }
+    search.addEventListener('input', render); render();
+  })();
+  </script>
+</body>
+</html>
